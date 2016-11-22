@@ -1,0 +1,33 @@
+{
+  "name": "html-snippets-resolver",
+  "version": "0.0.1",
+  "description": "Resolves HTML snippets for parsed Emmet abbreviation",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emmetio/html-snippets-resolver.git"
+  },
+  "keywords": [],
+  "author": "Sergey Chikuyonok <serge.che@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emmetio/html-snippets-resolver/issues"
+  },
+  "homepage": "https://github.com/emmetio/html-snippets-resolver#readme",
+  "devDependencies": {
+    "@emmetio/abbreviation": "^0.4.0",
+    "@emmetio/html-transform": "^0.1.0",
+    "@emmetio/snippets-registry": "emmetio/snippets-registry",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "mocha": "^3.1.2",
+    "rollup": "^0.36.3",
+    "rollup-watch": "^2.5.0"
+  }
+}
