@@ -14,6 +14,9 @@ describe('Resolver', () => {
         'link': 'link[rel=stylesheet href]/',
 		'link:css': 'link[href="${1:style}.css"]',
 		'link:css2': 'link[href="style2.css"]',
+        'link:rss': 'link[rel=alternate type=application/rss+xml title=RSS href="${1:rss.xml}"]',
+        'area': "area[shape coords href alt]/",
+    	'area:d': "area[shape=default]",
         'bq': 'blockquote',
         'adr': 'address',
         'str': 'strong',
@@ -37,6 +40,8 @@ describe('Resolver', () => {
         assert.equal(expand('a.test{text}'), '<a href="" class="test">text</a>');
         assert.equal(expand('str>.a'), '<strong><span class="a"></span></strong>');
         assert.equal(expand('link:css2'), '<link rel="stylesheet" href="style2.css" />');
+        assert.equal(expand('link:rss'), '<link rel="alternate" type="application/rss+xml" title="RSS" href="${1:rss.xml}" />');
+        assert.equal(expand('area:d'), '<area shape="default" coords="" href="" alt="" />');
         assert.equal(expand('doc'), '<html><head><meta charset="UTF-8" /><title>${1:Document}</title></head><body></body></html>');
         assert.equal(expand('!'), '<!DOCTYPE html>\n<html><head><meta charset="UTF-8" /><title>${1:Document}</title></head><body></body></html>');
 
