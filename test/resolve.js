@@ -18,7 +18,9 @@ describe('Resolver', () => {
         'adr': 'address',
         'str': 'strong',
         'meta': 'meta/',
+        '!!!': '{<!DOCTYPE html>\n}',
         'doc': 'html>(head>meta[charset=UTF-8]+title{${1:Document}})+body',
+        '!': '!!!+doc',
         fn(node) {
             node.value = 'fn value' + (node.repeat ? ' ' + node.repeat.value : '');
         }
@@ -36,6 +38,8 @@ describe('Resolver', () => {
         assert.equal(expand('str>.a'), '<strong><span class="a"></span></strong>');
         assert.equal(expand('link:css2'), '<link rel="stylesheet" href="style2.css" />');
         assert.equal(expand('doc'), '<html><head><meta charset="UTF-8" /><title>${1:Document}</title></head><body></body></html>');
+        assert.equal(expand('!'), '<!DOCTYPE html>\n<html><head><meta charset="UTF-8" /><title>${1:Document}</title></head><body></body></html>');
+
     });
 
     it('with repeater', () => {
