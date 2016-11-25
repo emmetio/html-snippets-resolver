@@ -18,7 +18,10 @@ export default function stringify(node, options) {
 		return node.value;
 	}
 
-	const attr = node.attributes.map(a => ` ${a.name}="${a.value || ''}"`).join('');
+	const attr = node.attributes.map(a => {
+		a = node.getAttribute(a.name);
+		return (!a.options.implied || a.value != null) ? ` ${a.name}="${a.value || ''}"` : '';
+	}).join('');
 	const name = node.name || '?';
 
 	return node.selfClosing

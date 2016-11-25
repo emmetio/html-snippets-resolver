@@ -32,12 +32,7 @@ export default function(node, registry, parse) {
             return snippet.value(node, registry, parse, resolve);
         }
 
-        let tree;
-        try {
-            tree = parse(snippet.value);
-        } catch (e) {
-            throw new Error(`Unable to parse "${snippet.value}" snippet: ${e.message}`);
-        }
+        const tree = parse(snippet.value);
 
         stack.add(snippet);
         tree.walk(resolve);
@@ -45,18 +40,14 @@ export default function(node, registry, parse) {
 
         // move current node contents into new tree
         const childTarget = findDeepestNode(tree);
-        node.walk(resolve);
-        while (node.firstChild) {
-            childTarget.appendChild(node.firstChild);
-        }
+        merge(childTarget, node);
 
-        // merge attributes from current node to generated ones
         while (tree.firstChild) {
-            const merged = merge(node, tree.firstChild);
-            node.parent.insertBefore(merged, node);
+            node.parent.insertBefore(tree.firstChild, node);
         }
 
-        node.remove();
+        childTarget.parent.insertBefore(node, childTarget);
+        childTarget.remove();
     };
 
     resolve(node);
@@ -69,6 +60,8 @@ export default function(node, registry, parse) {
  * @return {Node}
  */
 function merge(from, to) {
+    to.name = from.name;
+
     if (from.selfClosing) {
         to.selfClosing = true;
     }
@@ -81,14 +74,48 @@ function merge(from, to) {
         to.repeat = Object.assign({}, from.repeat);
     }
 
-    const attrs = from.attributes;
+    return mergeAttributes(from, to);
+}
+
+/**
+ * Transfer attributes from first element to second one and preserve first
+ * element’s attributes order
+ * @param  {Node} from
+ * @param  {Node} to
+ * @return {Node}
+ */
+function mergeAttributes(from, to) {
+    mergeClassNames(from, to);
+
+    // TODO merge implied attributes
+
+    // It’s important to preserve attributes order: ones in `from` have higher
+    // pripority than in `to`. Collect attributes in map in order they should
+    // appear in `to`
+    const attrMap = new Map();
+
+    let attrs = from.attributes;
     for (let i = 0; i < attrs.length; i++) {
-        const attr = attrs[i];
-        if (attr.name === 'class') {
-            mergeClassNames(from, to);
+        const attr = from.getAttribute(attrs[i].name);
+        attrMap.set(attr.name, attr.clone());
+    }
+
+    attrs = to.attributes;
+    for (let i = 0; i < attrs.length; i++) {
+        const attr = to.getAttribute(attrs[i].name);
+        if (attrMap.has(attr.name)) {
+            const a = attrMap.get(attr.name);
+            a.value = attr.value;
         } else {
-            to.setAttribute(attr);
+            attrMap.set(attr.name, attr);
         }
+
+        to.removeAttribute(attr);
+    }
+
+    const attrNames = Array.from(attrMap.keys());
+    for (let i = 0; i < attrNames.length; i++) {
+        to.setAttribute(attrMap.get(attrNames[i]));
     }
 
     return to;

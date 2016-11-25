@@ -11,7 +11,7 @@ describe('Resolver', () => {
     registry.add({
         'a': 'a[href]',
         'img': 'img[src alt]/',
-        'link': 'link[rel=stylesheet href]/',
+        'link': 'link[rel=stylesheet !type !title href]/',
 		'link:css': 'link[href="${1:style}.css"]',
 		'link:css2': 'link[href="style2.css"]',
         'link:rss': 'link[rel=alternate type=application/rss+xml title=RSS href="${1:rss.xml}"]',

@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/emmetio/html-snippets-resolver#readme",
   "devDependencies": {
-    "@emmetio/abbreviation": "^0.4.0",
-    "@emmetio/html-transform": "^0.1.0",
+    "@emmetio/abbreviation": "^0.4.2",
+    "@emmetio/html-transform": "^0.1.2",
     "@emmetio/snippets-registry": "^0.1.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
     "babel-register": "^6.18.0",
