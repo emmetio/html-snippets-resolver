@@ -2,7 +2,7 @@ const assert = require('assert');
 const parse = require('@emmetio/abbreviation');
 const createRegistry = require('@emmetio/snippets-registry').default;
 require('babel-register');
-const resolve = require('../').default;
+const resolve = require('../index').default;
 const stringify = require('./assets/stringify').default;
 
 describe('Resolver', () => {

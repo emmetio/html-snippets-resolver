@@ -2,12 +2,17 @@
   "name": "html-snippets-resolver",
   "version": "0.0.1",
   "description": "Resolves HTML snippets for parsed Emmet abbreviation",
-  "main": "index.js",
+  "main": "dist/html-snippets-resolver.cjs.js",
+  "jsnext:main": "dist/html-snippets-resolver.es.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build": "npm run build:cjs && npm run build:es",
+    "build:cjs": "rollup -c -o dist/html-snippets-resolver.cjs.js -f cjs ./index.js",
+    "build:es": "rollup -c -o dist/html-snippets-resolver.es.js -f es ./index.js",
+    "prepublish": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
