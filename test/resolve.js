@@ -30,9 +30,8 @@ describe('Resolver', () => {
     });
 
     const expand = (abbr, content) => {
-        const tree = parse(abbr);
-        tree.walk(node => resolve(node, registry, parse));
-        return stringify( htmlTransform(tree, content) );
+        const tree = parse(abbr).use(resolve, registry).use(htmlTransform, content);
+        return stringify(tree);
     };
 
     it('simple resolve', () => {
@@ -44,7 +43,6 @@ describe('Resolver', () => {
         assert.equal(expand('area:d'), '<area shape="default" coords="" href="" alt="" />');
         assert.equal(expand('doc'), '<html><head><meta charset="UTF-8" /><title>${1:Document}</title></head><body></body></html>');
         assert.equal(expand('!'), '<!DOCTYPE html>\n<html><head><meta charset="UTF-8" /><title>${1:Document}</title></head><body></body></html>');
-
     });
 
     it('with repeater', () => {

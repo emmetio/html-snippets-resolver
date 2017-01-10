@@ -1,21 +1,28 @@
 'use strict';
 
+import parse from '@emmetio/abbreviation';
+
 /**
- * Finds matching snippet from `registry` for given node and resolves it into
- * a parsed abbreviation via `parse` method. Given `node` is then updated
- * or replaced with matched abbreviation tree.
+ * For every node in given `tree`, finds matching snippet from `registry` and
+ * resolves it into a parsed abbreviation. Resolved node is then updated or
+ * replaced with matched abbreviation tree.
  *
  * A HTML registry basically contains aliases to another Emmet abbreviations,
  * e.g. a predefined set of name, attribues and so on, possibly a complex
  * abbreviation with multiple elements. So we have to get snippet, parse it
  * and recursively resolve it.
  *
- * @param  {Node} name                 Node to resolve
+ * @param  {Node} tree                 Parsed Emmet abbreviation
  * @param  {SnippetsRegistry} registry Registry with all available snippets
- * @param  {Function} parse            Function to transform snippet into a tree
- * @return {Node} Parsed abbreviation tree or `null` if snippet not found
+ * @return {Node} Updated tree
  */
-export default function(node, registry, parse) {
+
+export default function(tree, registry) {
+    tree.walk(node => resolveNode(node, registry));
+    return tree;
+}
+
+function resolveNode(node, registry) {
     const stack = new Set();
     const resolve = node => {
         const snippet = registry.resolve(node.name);
@@ -29,7 +36,7 @@ export default function(node, registry, parse) {
 
         // In case if matched snippet is a function, pass control into it
         if (typeof snippet.value === 'function') {
-            return snippet.value(node, registry, parse, resolve);
+            return snippet.value(node, registry, resolve);
         }
 
         const tree = parse(snippet.value);
@@ -87,7 +94,7 @@ function merge(from, to) {
 function mergeAttributes(from, to) {
     mergeClassNames(from, to);
 
-    // TODO merge implied attributes
+    // TODO properly merge implied attributes
 
     // It’s important to preserve attributes order: ones in `from` have higher
     // pripority than in `to`. Collect attributes in map in order they should
@@ -96,15 +103,14 @@ function mergeAttributes(from, to) {
 
     let attrs = from.attributes;
     for (let i = 0; i < attrs.length; i++) {
-        const attr = from.getAttribute(attrs[i].name);
-        attrMap.set(attr.name, attr.clone());
+        attrMap.set(attrs[i].name, attrs[i].clone());
     }
 
-    attrs = to.attributes;
-    for (let i = 0; i < attrs.length; i++) {
-        const attr = to.getAttribute(attrs[i].name);
+    attrs = to.attributes.slice();
+    for (let i = 0, attr, a; i < attrs.length; i++) {
+        attr = attrs[i];
         if (attrMap.has(attr.name)) {
-            const a = attrMap.get(attr.name);
+            a = attrMap.get(attr.name);
             a.value = attr.value;
         } else {
             attrMap.set(attr.name, attr);
@@ -113,9 +119,9 @@ function mergeAttributes(from, to) {
         to.removeAttribute(attr);
     }
 
-    const attrNames = Array.from(attrMap.keys());
-    for (let i = 0; i < attrNames.length; i++) {
-        to.setAttribute(attrMap.get(attrNames[i]));
+    const newAttrs = Array.from(attrMap.values());
+    for (let i = 0; i < newAttrs.length; i++) {
+        to.setAttribute(newAttrs[i]);
     }
 
     return to;

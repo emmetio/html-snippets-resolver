@@ -9,13 +9,12 @@ export default function stringify(node, options) {
 		return children;
 	} else if (node.isGroup) {
 		// grouping node
-        if (options.omitGroups) {
-            return children;
-        }
-		return `(${children})${counter(node, options)}`;
+		return options.omitGroups
+			? children
+			: `(${children})${counter(node, options)}`;
 	} else if (node.value && !node.name && !node.attributes.length) {
 		// text node
-		return node.value;
+		return node.value + children;
 	}
 
 	const attr = node.attributes.map(a => {
