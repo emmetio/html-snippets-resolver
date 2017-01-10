@@ -1,6 +1,6 @@
 {
   "name": "html-snippets-resolver",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Resolves HTML snippets for parsed Emmet abbreviation",
   "main": "dist/html-snippets-resolver.cjs.js",
   "jsnext:main": "dist/html-snippets-resolver.es.js",
