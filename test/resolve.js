@@ -1,6 +1,5 @@
 const assert = require('assert');
 const parse = require('@emmetio/abbreviation');
-const htmlTransform = require('@emmetio/html-transform');
 const createRegistry = require('@emmetio/snippets-registry').default;
 require('babel-register');
 const resolve = require('../').default;
@@ -30,14 +29,14 @@ describe('Resolver', () => {
     });
 
     const expand = (abbr, content) => {
-        const tree = parse(abbr).use(resolve, registry).use(htmlTransform, content);
+        const tree = parse(abbr).use(resolve, registry);
         return stringify(tree);
     };
 
     it('simple resolve', () => {
         assert.equal(expand('bq.a>bq.b+bq.c'), '<blockquote class="a"><blockquote class="b"></blockquote><blockquote class="c"></blockquote></blockquote>');
         assert.equal(expand('a.test{text}'), '<a href="" class="test">text</a>');
-        assert.equal(expand('str>.a'), '<strong><span class="a"></span></strong>');
+        assert.equal(expand('str>span.a'), '<strong><span class="a"></span></strong>');
         assert.equal(expand('link:css2'), '<link rel="stylesheet" href="style2.css" />');
         assert.equal(expand('link:rss'), '<link rel="alternate" type="application/rss+xml" title="RSS" href="${1:rss.xml}" />');
         assert.equal(expand('area:d'), '<area shape="default" coords="" href="" alt="" />');
@@ -46,8 +45,7 @@ describe('Resolver', () => {
     });
 
     it('with repeater', () => {
-        assert.equal(expand('a.test{text $}*2>.b'), '<a*2@1 href="" class="test">text 1<span class="b"></span></a><a*2@2 href="" class="test">text 2<span class="b"></span></a>');
-        assert.equal(expand('div>a.test*>.b', ['foo', 'bar']), '<div><a*2@1 href="" class="test"><span class="b">foo</span></a><a*2@2 href="" class="test"><span class="b">bar</span></a></div>');
+        assert.equal(expand('a.test{text}*2>span.b'), '<a*2@1 href="" class="test">text<span class="b"></span></a><a*2@2 href="" class="test">text<span class="b"></span></a>');
     });
 
     it('function match', () => {
