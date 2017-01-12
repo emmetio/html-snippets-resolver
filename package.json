@@ -33,6 +33,6 @@
     "rollup": "^0.41.1"
   },
   "dependencies": {
-    "@emmetio/abbreviation": "^0.4.6"
+    "@emmetio/abbreviation": "^0.5.0"
   }
 }
