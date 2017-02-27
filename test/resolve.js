@@ -20,6 +20,8 @@ describe('Resolver', () => {
         'adr': 'address',
         'str': 'strong',
         'meta': 'meta/',
+        "script": "script[!src]",
+    	"script:src": "script[src]",
         '!!!': '{<!DOCTYPE html>\n}',
         'doc': 'html>(head>meta[charset=UTF-8]+title{${1:Document}})+body',
         '!': '!!!+doc',
@@ -50,5 +52,11 @@ describe('Resolver', () => {
 
     it('function match', () => {
         assert.equal(expand('span>fn*2>str'), '<span><fn*2@1>fn value 1<strong></strong></fn><fn*2@2>fn value 2<strong></strong></fn></span>');
+    });
+
+    it('implied attribute', () => {
+        assert.equal(expand('script'), '<script></script>');
+        assert.equal(expand('script[src]'), '<script src=""></script>');
+        assert.equal(expand('script:src'), '<script src=""></script>');
     });
 });

@@ -94,8 +94,6 @@ function merge(from, to) {
 function mergeAttributes(from, to) {
     mergeClassNames(from, to);
 
-    // TODO properly merge implied attributes
-
     // It’s important to preserve attributes order: ones in `from` have higher
     // pripority than in `to`. Collect attributes in map in order they should
     // appear in `to`
@@ -112,6 +110,12 @@ function mergeAttributes(from, to) {
         if (attrMap.has(attr.name)) {
             a = attrMap.get(attr.name);
             a.value = attr.value;
+
+            // If user explicitly wrote attribute in abbreviation, it’s no longer
+            // implied and should be outputted even if value is empty
+            if (a.options.implied) {
+                a.options.implied = false;
+            }
         } else {
             attrMap.set(attr.name, attr);
         }
