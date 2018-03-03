@@ -8,7 +8,7 @@ import parse from '@emmetio/abbreviation';
  * replaced with matched abbreviation tree.
  *
  * A HTML registry basically contains aliases to another Emmet abbreviations,
- * e.g. a predefined set of name, attribues and so on, possibly a complex
+ * e.g. a predefined set of name, attributes and so on, possibly a complex
  * abbreviation with multiple elements. So we have to get snippet, parse it
  * and recursively resolve it.
  *

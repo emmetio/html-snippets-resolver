@@ -25,6 +25,7 @@ describe('Resolver', () => {
         '!!!': '{<!DOCTYPE html>\n}',
         'doc': 'html>(head>meta[charset=UTF-8]+title{${1:Document}})+body',
         '!': '!!!+doc',
+        'foo': '.foo[bar=baz]',
         fn(node) {
             node.value = 'fn value' + (node.repeat ? ' ' + node.repeat.value : '');
         }
@@ -58,5 +59,9 @@ describe('Resolver', () => {
         assert.equal(expand('script'), '<script></script>');
         assert.equal(expand('script[src]'), '<script src=""></script>');
         assert.equal(expand('script:src'), '<script src=""></script>');
+    });
+
+    it('snippets with implicit names', () => {
+        assert.equal(expand('foo'), '<? class="foo" bar="baz"></?>');
     });
 });
