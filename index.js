@@ -95,7 +95,7 @@ function mergeAttributes(from, to) {
     mergeClassNames(from, to);
 
     // It’s important to preserve attributes order: ones in `from` have higher
-    // pripority than in `to`. Collect attributes in map in order they should
+    // priority than in `to`. Collect attributes in map in order they should
     // appear in `to`
     const attrMap = new Map();
 
@@ -147,7 +147,7 @@ function mergeClassNames(from, to) {
 }
 
 /**
- * Finds node which is the deepest for in current node or node iteself.
+ * Finds node which is the deepest for in current node or node itself.
  * @param  {Node} node
  * @return {Node}
  */
